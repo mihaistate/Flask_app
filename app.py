@@ -2,6 +2,7 @@ from slugify import slugify
 import sqlite3
 from flask import Flask, render_template, request, url_for, flash, redirect
 from werkzeug.exceptions import abort
+import feedparser
 
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = 'thereisasecretkey'
@@ -23,17 +24,21 @@ def get_post(post_id):
 
 @app.route('/')
 def index():
-   conn = get_db_connection()
-   posts = conn.execute('SELECT * FROM posts').fetchall()
-   conn.close()
-   return  render_template('index.html', posts=posts)
+   # conn = get_db_connection()
+   rss_news_url = "https://feeds.content.dowjones.io/public/rss/mw_topstories"
+   data = []
+   data.append(feedparser.parse(rss_news_url)['entries'])
+   return  render_template('index.html', data=data)
 
-@app.route('/softdev.html')
-def softdev():
+@app.route('/newest.html')
+def newest():
    conn = get_db_connection()
-   posts = conn.execute('SELECT * FROM posts').fetchall()
+   # posts = conn.execute('SELECT * FROM posts').fetchall()
    conn.close()
-   return render_template('softdev.html', posts=posts) 
+   rss_news_url = "https://feeds.content.dowjones.io/public/rss/mw_marketpulse"
+   data = []
+   data.append(feedparser.parse(rss_news_url)['entries'])
+   return render_template('newest.html', data=data) 
 
 @app.route('/<int:post_id>')
 def post(post_id):

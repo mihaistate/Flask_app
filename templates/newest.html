@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
-
-{% block content %}
-     <h1>{% block title %}Welcome to the <s>IT</s> <i>Finance</i> Blog {% endblock %}</h1>
-       
-      {% for articles in data %}
+{% block content%}
+   <h1>{% block title %}Newest freshest <s>IT</s> <i>Finance</i> news {% endblock %}</h1>
+ 
+    
+       {% for articles in data %}
         {% for article in articles %}
           <h3>{{article.get('title')}}</h3>
           <p>{{article.get('description')}} <a href="{{article.get('link')}}" target="_blank">read more</a></p>
@@ -13,5 +13,5 @@
           {% endfor %}
         <br><hr><br>
       {% endfor %}
-{% endblock %}
 
+{% endblock %}     
