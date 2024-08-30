@@ -6,7 +6,8 @@
        {% for articles in data %}
         {% for article in articles %}
           <h3>{{article.get('title')}}</h3>
-          <p>{{article.get('description')}} <a href="{{article.get('link')}}" target="_blank">read more</a></p>
+          <p>{{article.get('description')}}</p>
+          <p><a href="{{article.get('link')}}" target="_blank">Read more</a> <a href=https://bbc.co.uk text-align:right>Comments</a></p>
           {% if article.get('image') != None  %}
             <img src="{{article.get('image')}}">
           {% endif %}

@@ -12,8 +12,7 @@ cur = connection.cursor()
 
 
 cur.execute("INSERT INTO posts (id, title) VALUES (?, ?)",
-            (uuid.uuid5(uuid.UUID("fb5134a9-440b-4b75-bf5a-fd0efc9fa201"), "adsads").bytes, 'Content for the first post')
-            )
+            (uuid.uuid5(uuid.UUID("fb5134a9-440b-4b75-bf5a-fd0efc9fa201"), "finance.com ").bytes, 'Finance crashes: apocalypse incoming'))
 #connection.executescript(sql_script)
 connection.commit()
 connection.close()           

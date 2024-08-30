@@ -3,6 +3,7 @@ import sqlite3
 from flask import Flask, render_template, request, url_for, flash, redirect
 from werkzeug.exceptions import abort
 import feedparser
+import uuid
 
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = 'thereisasecretkey'
@@ -22,23 +23,28 @@ def get_post(post_id):
    return post
 
 
-@app.route('/')
-def index():
-   # conn = get_db_connection()
-   rss_news_url = "https://feeds.content.dowjones.io/public/rss/mw_topstories"
+def content_page(url, route):
+   rss_news_url = url
    data = []
    data.append(feedparser.parse(rss_news_url)['entries'])
-   return  render_template('index.html', data=data)
+   conn = get_db_connection()
+   for articles in data:
+      for article in articles:
+         # print(uuid.UUID(article["guid"]).bytes)
+         conn.execute('INSERT OR IGNORE  INTO posts (id, title, link) VALUES (?,?,?)',
+                        (article["guid"], article["title"], article["link"]))
+   conn.commit()
+   conn.close()
+   return render_template(route, data=data) 
+
+
+@app.route('/')
+def index():
+   return content_page("https://feeds.content.dowjones.io/public/rss/mw_topstories", "index.html")
 
 @app.route('/newest.html')
 def newest():
-   conn = get_db_connection()
-   # posts = conn.execute('SELECT * FROM posts').fetchall()
-   conn.close()
-   rss_news_url = "https://feeds.content.dowjones.io/public/rss/mw_marketpulse"
-   data = []
-   data.append(feedparser.parse(rss_news_url)['entries'])
-   return render_template('newest.html', data=data) 
+   return content_page("https://www.ft.com/rss/home", 'newest.html')
 
 @app.route('/<int:post_id>')
 def post(post_id):
