@@ -1,7 +1,27 @@
 {% extends 'base.html' %}
 
-{ % block content %}
-  <h2>{% block title %} {{ post['title'] }} {% endblock %}</h2>
-  <span class="badge badge-primary">{{ post['created'] }}</span>
-  <p>{{ post['content'] }}</p>
+{% block content%}
+  <h2><a href="{{ post['link'] }}" >{% block title %} {{ post['title'] }} {% endblock %}</a></h2>
+  {% for comment in comments %}
+  <p> <b>{{ comment['user'] }}</b> on {{ comment['created'] }}<p>
+  <p> {{ comment['body'] }}</p>
+  {% endfor %}
 
+<form method="post">
+    <div class="form-group">
+        <label for="user">Username</label>
+        <input type="text" name="user"
+            placeholder="Username" class="form-control"
+            value="{{ request.form['user'] }}"></input>
+    </div>
+    
+    <div class="form-group">
+        <label for="body">Content</label>
+        <textarea name="body" placeholder="Share your thoughts!!!111!"
+                  class="form-control" value="{{ request.form['body'] }}"></textarea>
+     </div>
+     <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+     </div>
+</form>
+{% endblock %}     
