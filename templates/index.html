@@ -1,21 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-     <h1>{% block title %}Welcome to the IT Blog {% endblock %}</h1>
-
-     <!-- <p>To create a post, go to <a href="http://127.0.0.1:5000/create" target="_blank">Create Page</a></p>-->
-      
-         <a class="btn-primary" href="{{url_for('create')}}">New Post</a>
+     <h1>{% block title %}Welcome to the <s>IT</s> <i>Finance</i> Blog {% endblock %}</h1>
        
-     {% for post in posts %}
-          <a href="{{ url_for('post', post_id=post['id']) }}">
-              <h2>{{ post['title'] }}</h2>
-          </a>
-          <span class="badge badge-primary">{{ post['created'] }}</span>
-          <a href="{{ url_for('edit', id=post['id']) }}">
-            <span class="badge badge-warning">Edit</span>
-          </a>  
-          <hr>
-     {% endfor %}
+     {% for articles in data %}
+     {% for article in articles %}
+       <h3>{{article.get('title')}}</h3>
+       <p>{{article.get('description')}}</p>
+       <p><a href="{{article.get('link')}}" target="_blank">Read more</a> <a href="/{{article.get('guid')}}" text-align:right>Comments</a></p>
+       {% if article.get('image') != None  %}
+         <img src="{{article.get('image')}}">
+       {% endif %}
+       {% endfor %}
+     <br><hr><br>
+   {% endfor %}
+
 {% endblock %}
 

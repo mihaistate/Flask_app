@@ -1,7 +1,7 @@
-from slugify import slugify
 import sqlite3
 from flask import Flask, render_template, request, url_for, flash, redirect
 from werkzeug.exceptions import abort
+import feedparser
 
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = 'thereisasecretkey'
@@ -15,30 +15,55 @@ def get_post(post_id):
    conn = get_db_connection()
    post = conn.execute('SELECT * FROM posts WHERE id = ?',
                    (post_id,)).fetchone()
+   comments = conn.execute('SELECT * FROM comments INNER JOIN posts ON posts.id=comments.post WHERE posts.id = ?',
+                   (post_id,)).fetchall()
    conn.close()
    if post is None:
       abort(404)
-   return post
+   return post, comments
+
+
+def content_page(url, route):
+   rss_news_url = url
+   data = []
+   data.append(feedparser.parse(rss_news_url)['entries'])
+   conn = get_db_connection()
+   for articles in data:
+      for article in articles:
+         conn.execute('INSERT OR IGNORE  INTO posts (id, title, link) VALUES (?,?,?)',
+                        (article["guid"], article["title"], article["link"]))
+   conn.commit()
+   conn.close()
+   return render_template(route, data=data) 
 
 
 @app.route('/')
 def index():
-   conn = get_db_connection()
-   posts = conn.execute('SELECT * FROM posts').fetchall()
-   conn.close()
-   return  render_template('index.html', posts=posts)
+   return content_page("https://feeds.content.dowjones.io/public/rss/mw_topstories", "index.html")
 
-@app.route('/softdev.html')
-def softdev():
-   conn = get_db_connection()
-   posts = conn.execute('SELECT * FROM posts').fetchall()
-   conn.close()
-   return render_template('softdev.html', posts=posts) 
+@app.route('/newest.html')
+def newest():
+   return content_page("https://www.ft.com/rss/home", 'newest.html')
 
-@app.route('/<int:post_id>')
+@app.route('/<post_id>', methods=('GET','POST'))
 def post(post_id):
-   post = get_post(post_id)
-   return render_template('post.html', post=post)
+   post, comments = get_post(post_id)
+
+   if request.method == 'POST':
+      print(request.form)
+      print(request.form['user'])
+      user = request.form['user']
+      body = request.form['body']
+      if not user:
+         flash('Username is required!')
+      else:
+         conn = get_db_connection()
+         conn.execute('INSERT INTO comments (user, body, post) VALUES (?,?,?)',
+                        (user, body, post_id))
+         conn.commit()
+         conn.close()
+         return redirect(request.url)
+   return render_template('post.html', post=post, comments=comments)
 
 @app.route('/create', methods=('GET','POST'))
 def create():
@@ -46,6 +71,7 @@ def create():
       title = request.form['title']
       content = request.form['content']
 
+   if request.method == 'POST':
       if not title:
          flash('Title is required!')
       else:
