@@ -10,3 +10,4 @@ htmlcov/
 docs/_build/
 environments/
 database.db
+.pytest_cache/

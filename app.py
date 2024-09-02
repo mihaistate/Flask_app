@@ -23,8 +23,7 @@ def get_post(post_id):
    return post, comments
 
 
-def content_page(url, route):
-   rss_news_url = url
+def content_page(rss_news_url, route):
    data = []
    data.append(feedparser.parse(rss_news_url)['entries'])
    conn = get_db_connection()
@@ -41,7 +40,7 @@ def content_page(url, route):
 def index():
    return content_page("https://feeds.content.dowjones.io/public/rss/mw_topstories", "index.html")
 
-@app.route('/newest.html')
+@app.route('/newest')
 def newest():
    return content_page("https://www.ft.com/rss/home", 'newest.html')
 
@@ -50,8 +49,6 @@ def post(post_id):
    post, comments = get_post(post_id)
 
    if request.method == 'POST':
-      print(request.form)
-      print(request.form['user'])
       user = request.form['user']
       body = request.form['body']
       if not user:
@@ -65,67 +62,7 @@ def post(post_id):
          return redirect(request.url)
    return render_template('post.html', post=post, comments=comments)
 
-@app.route('/create', methods=('GET','POST'))
-def create():
-   if request.method == 'POST':
-      title = request.form['title']
-      content = request.form['content']
 
-   if request.method == 'POST':
-      if not title:
-         flash('Title is required!')
-      else:
-         conn = get_db_connection()
-         conn.execute('INSERT INTO posts (title, content) VALUES (?,?)',
-                       (title, content))
-         conn.commit()
-         conn.close()
-         return redirect(url_for('index'))
-   
-   return render_template('create.html')   
-
-@app.route('/<int:id>/edit', methods=('GET', 'POST'))
-def edit(id):
-   post= get_post(id)
-
-   if request.method == 'POST':
-      title = request.form['title']
-      content = request.form['content']
-
-      if not title:
-         flash('Title is required')
-      else: 
-         conn = get_db_connection()
-         conn.execute('UPDATE posts SET title = ?, content = ?'
-                                    'WHERE id = ?',
-                                    (title, content, id))
-         conn.commit()
-         conn.close()
-         return redirect(url_for('index'))
-   return render_template('edit.html', post=post)
-         
-@app.route('/<int:id>delete', methods=('POST',))
-def delete(id):
-   post = get_post(id)
-   conn = get_db_connection()
-   conn.execute('DELETE FROM posts WHERE id = ?', (id,))
-   conn.commit()
-   conn.close()
-   flash('"{}" was succesfully deleted!'.format(post['title']))   
-   return redirect(url_for('index'))
-
-@app.route('/<int:id>get/<slug>', methods=('POST', 'GET',))
-def request_post_content():
-   #if request.method == 'GET':
-   #   title =request.form['title']
-   #   content=request.form['content']
-     post=get_post(id)
-     conn = get_db_connection()
-     conn.execute('SELECT * FROM posts where id=?', (id,))
-     conn.commit()
-     #return redirect(url_for('index'))
-     return render_template('edit.html', post=post)
-
-# if __name__ == '__main__':
-#       app.debug = True
-#       app.run()
+if __name__ == '__main__':
+      app.debug = True
+      app.run()
