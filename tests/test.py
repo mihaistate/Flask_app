@@ -1,9 +1,6 @@
-from urllib import response
 import pytest
-import sys
 from ..app import index, post, app, get_db_connection
 from ..init_db import populate, start, clean
-import sqlite3
 
 
 @pytest.fixture()
