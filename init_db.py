@@ -1,4 +1,7 @@
 import sqlite3
+import os
+
+
 
 def start():
     connection = sqlite3.connect('database.db')
@@ -21,7 +24,6 @@ def start():
     );
 
     """
-    # with open('create_table.sql') as f:
     connection.executescript(setup)
     connection.close()
 
@@ -34,7 +36,11 @@ def populate():
             ("Fritz John", 'No my savings are gone :(', "asd"))
     cur.execute("INSERT INTO comments (user, body, post) VALUES (?, ?, ?)",
             ("Thomas Blomp", 'I soiled my pants', "asd"))
+    connection.commit()
     connection.close()
+
+def clean():
+    os.remove("database.db") 
 
 
 if __name__== '__main__':
