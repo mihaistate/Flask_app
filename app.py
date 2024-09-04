@@ -3,17 +3,47 @@ from flask import Flask, render_template, request, url_for, flash, redirect
 from werkzeug.exceptions import abort
 import feedparser
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
-from prometheus_client import make_wsgi_app, Counter
+from prometheus_client import make_wsgi_app, Counter, Gauge
+import psutil
+import socket
+import threading
+import time
+from prometheus_flask_exporter import PrometheusMetrics
+
 
 comment = Counter('comments', 'number of comments')
 userless_comment = Counter('userless_comments', 'number of comments without username')
-not_found = Counter('not_found', 'number of 404 errors')
+articles_counter = Counter('articles', 'number of articles')
+ram_metric = Gauge("memory_usage_bytes", "Memory usage in bytes.",
+                  ["host", "type"])
+cpu_metric = Gauge("cpu_usage_percent", "CPU usage percent.",
+                  ["host", "core"])
 
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = 'thereisasecretkey'
-app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {
-    '/metrics': make_wsgi_app()
-})
+metrics = PrometheusMetrics(app)
+
+# from https://github.com/slok/prometheus-python/blob/master/examples/memory_cpu_usage_example.py
+def usage_metric_loop():
+   host = socket.gethostname()
+   while True:
+      time.sleep(1)
+      
+      ram = psutil.virtual_memory()
+      swap = psutil.swap_memory()
+
+      ram_metric.labels(host, "used").set(ram.used)
+      ram_metric.labels(host, "percent").set(ram.percent)
+      ram_metric.labels(host, "swap").set(swap.used)
+
+      # Add cpu metrics
+      for c, p in enumerate(psutil.cpu_percent(interval=1, percpu=True)):
+         cpu_metric.labels(host, c).set(p)
+
+
+thread = threading.Thread(target=usage_metric_loop)
+thread.daemon=True
+thread.start()
 
 def get_db_connection():
    conn=sqlite3.connect('database.db')
@@ -22,7 +52,6 @@ def get_db_connection():
 
 @app.errorhandler(404)
 def page_not_found(e):
-   not_found.inc()
    return render_template('404.html'), 404
 
 def get_post(post_id):
@@ -43,6 +72,7 @@ def content_page(rss_news_url, route):
    conn = get_db_connection()
    for articles in data:
       for article in articles:
+         articles_counter.inc()
          conn.execute('INSERT OR IGNORE  INTO posts (id, title, link) VALUES (?,?,?)',
                         (article["guid"], article["title"], article["link"]))
    conn.commit()
@@ -77,7 +107,6 @@ def post(post_id):
          comment.inc()
          return redirect(request.url)
    return render_template('post.html', post=post, comments=comments)
-
 
 if __name__ == '__main__':
       app.debug = True
