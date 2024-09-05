@@ -56,11 +56,11 @@ Once submitted, comments are stored in tthe SQLite database and displayed below 
 ### Directory Structure
 * `venv` - Contains main application code.
     * `app.py` - Main Python script
-    * __init__.py - Initializes Flask application.
-    * init_db.py - Creates database
-    * requirements.txt - List of Python dependencies
-    * Dockerfile - For containerizing the application
-    * prometheus.yml - For running metrics
+    * `__init__.py` - Initializes Flask application.
+    * `init_db.py` - Creates database
+    * `requirements.txt` - List of Python dependencies
+    * `Dockerfile` - For containerizing the application
+    * `prometheus.yml` - For running metrics
 * `templates/` - HTML templates for rendering pages.
 * `static/` - Static files like CSS
 * `tests/` - test.py - for unit and integration testing
@@ -73,4 +73,9 @@ Kubernetes cluster currently does not work. We are working on this issue!
 Feel free to open issues or submit pull requests if you have improvements or bug fixes.
 
 ### Contact
-For any questions or feedback, please contact mihaistate01 or open an issue on the GitHub repository.
+For any questions or feedback, please contact mihaistate or open an issue on the GitHub repository.
+
+## Project Contributors
+1. **Mihai State (Owner)** - Writing Flask application, database, deploying to Kubernetes cluster on Azure instance, creating database with SQL.
+2. **Jon Corales** - Writing Dockerfile, connecting Prometheus server (with help from Domonkos), displaying metrics to Grafana dashboard, creating group presentation.
+3. **Domonkos Revesz** - Unit testing, implementing RSS feed, setting up Prometheus server to connect to Flask application.
