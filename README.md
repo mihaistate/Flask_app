@@ -2,11 +2,11 @@
 
 Welcome to the Fiancial News RSS Feed Flask Application! This simple web application displays the most recent financial news headlines from an RSS feed and allows users to add comments to each item.
 
-#### Features
+### Features
 * **RSS Feed Integration:** Fetch and display the latest financial news headlines from an RSS feed.
 * **User Comments:** Allow users to leave comments on each news headline.
 
-#### Requirements
+### Requirements
 * Python 3.7+
 * Flask
 * Feedparser (for parsing RSS feeds)
@@ -14,7 +14,7 @@ Welcome to the Fiancial News RSS Feed Flask Application! This simple web applica
 * Dockerfile (for containerization)
 * Prometheus Server (for running metrics)
 
-#### Installation
+### Installation
 
 1. **Clone the Repository**
 ``git clone https://github.com/mihaistate/Flask_app.git``
@@ -30,7 +30,7 @@ Welcome to the Fiancial News RSS Feed Flask Application! This simple web applica
 4. **Create the Database**
 ``python init_db.py``
 
-#### Usage
+### Usage
 
 1. **Run Docker container with Prometheus**
 ``docker run -p 9090:9090 -v prometheus.yml prom/prometheus``
@@ -41,19 +41,19 @@ Welcome to the Fiancial News RSS Feed Flask Application! This simple web applica
 3. **Visit the Application**
 Open your web browser and go to `http://127.0.0.1:5000` to see the financial news headlines.
 
-#### Adding User Comments
+### Adding User Comments
 Users can add comments to news headlines by:
 1. **Selecting a News Item:** Click on 'Comment' underneath headline
 2. **Adding a Comment:** Submit comment using the provided form.
 
-##### Comment Submission
+### Comment Submission
 The comment form requires:
 * **Name:** Your name or a pseudonym.
 * **Comment:** The content of your comment.
 
 Once submitted, comments are stored in tthe SQLite database and displayed below the respective news item.
 
-#### Directory Structure
+### Directory Structure
 * `venv` - Contains main application code.
     * `app.py` - Main Python script
     * __init__.py - Initializes Flask application.
@@ -66,8 +66,11 @@ Once submitted, comments are stored in tthe SQLite database and displayed below 
 * `tests/` - test.py - for unit and integration testing
 * `k8s` - for deploying on a Kubernetes cluster
 
-#### Contributing
+### Warnings
+Kubernetes cluster currently does not work. We are working on this issue!
+
+### Contributing
 Feel free to open issues or submit pull requests if you have improvements or bug fixes.
 
-#### Contact
+### Contact
 For any questions or feedback, please contact mihaistate01 or open an issue on the GitHub repository.
