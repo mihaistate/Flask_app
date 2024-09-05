@@ -17,26 +17,26 @@ Welcome to the Fiancial News RSS Feed Flask Application! This simple web applica
 #### Installation
 
 1. **Clone the Repository**
-`git clone https://github.com/mihaistate/Flask_app.git`
-`cd Flask_app`
+``git clone https://github.com/mihaistate/Flask_app.git``
+``cd Flask_app``
 
 2. **Set up a Virtual Environment**
-`python -m venv venv`
-`.\venv\Scripts\Activate.ps1
+``python -m venv venv``
+``.\venv\Scripts\Activate.ps1``
 
 3. **Install Dependencies**
-`pip install -r requirements.txt
+``pip install -r requirements.txt``
 
 4. **Create the Database**
-`python init_db.py`
+``python init_db.py``
 
 #### Usage
 
 1. **Run Docker container with Prometheus**
-`docker run -p 9090:9090 -v prometheus.yml prom/prometheus
+``docker run -p 9090:9090 -v prometheus.yml prom/prometheus``
 
 2. Run the app
-`flask run`
+``flask run``
 
 3. **Visit the Application**
 Open your web browser and go to `http://127.0.0.1:5000` to see the financial news headlines.
