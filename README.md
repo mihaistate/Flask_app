@@ -14,7 +14,9 @@ Welcome to the Fiancial News RSS Feed Flask Application! This simple web applica
 * Dockerfile (for containerization)
 * Prometheus Server (for running metrics)
 
-### Installation
+### Installation and usage
+
+To run the app on testing mode:
 
 1. **Clone the Repository**
 ``git clone https://github.com/mihaistate/Flask_app.git``
@@ -30,13 +32,16 @@ Welcome to the Fiancial News RSS Feed Flask Application! This simple web applica
 4. **Create the Database**
 ``python init_db.py``
 
-### Usage
+5. **Run Prometheus**
+``prometheus --config.file=./prometheus.yml``
 
-1. **Run Docker container with Prometheus**
-``docker run -p 9090:9090 -v prometheus.yml prom/prometheus``
-
-2. Run the app
+6. **Run the app**
 ``flask run``
+
+To deploy the app in Docker containers:
+
+``run the setup script``
+
 
 3. **Visit the Application**
 Open your web browser and go to `http://127.0.0.1:5000` to see the financial news headlines.
@@ -54,13 +59,14 @@ The comment form requires:
 Once submitted, comments are stored in tthe SQLite database and displayed below the respective news item.
 
 ### Directory Structure
-* `venv` - Contains main application code.
-    * `app.py` - Main Python script
-    * `__init__.py` - Initializes Flask application.
-    * `init_db.py` - Creates database
-    * `requirements.txt` - List of Python dependencies
-    * `Dockerfile` - For containerizing the application
-    * `prometheus.yml` - For running metrics
+* `app.py` - Main Python script
+* `__init__.py` - Initializes Flask application.
+* `init_db.py` - Creates database
+* `requirements.txt` - List of Python dependencies
+* `Dockerfile` - For containerizing the application
+* `prom` - Contains Prometheus application code.
+    * `Dockerfile` - For containerizing Prometheus
+    * `prometheus.yml` - For configuring Prometheus
 * `templates/` - HTML templates for rendering pages.
 * `static/` - Static files like CSS
 * `tests/` - test.py - for unit and integration testing
