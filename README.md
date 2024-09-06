@@ -38,13 +38,13 @@ To run the app on testing mode:
 6. **Run the app**
 ``flask run``
 
+7. **Visit the Application**
+Open your web browser and go to `http://127.0.0.1:5000` to see the financial news headlines.
+
 To deploy the app in Docker containers:
 
-``run the setup script``
+execute the statements in ``setup_script``
 
-
-3. **Visit the Application**
-Open your web browser and go to `http://127.0.0.1:5000` to see the financial news headlines.
 
 ### Adding User Comments
 Users can add comments to news headlines by:
