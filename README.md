@@ -68,6 +68,8 @@ Once submitted, comments are stored in tthe SQLite database and displayed below 
 
 ### Warnings
 Kubernetes cluster currently does not work. We are working on this issue!
+![image](https://github.com/user-attachments/assets/e0e68965-94e7-4c4d-9122-56bf77f58ead)
+
 
 ### Contributing
 Feel free to open issues or submit pull requests if you have improvements or bug fixes.
