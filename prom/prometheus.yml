@@ -13,7 +13,7 @@ scrape_configs:
 
   - job_name: 'financeblog'
     static_configs:
-      - targets: ['20.234.66.234:80']
+      - targets: ['<public_ip>:80']
         labels:
           group: 'prod'
 
