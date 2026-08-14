@@ -9,6 +9,7 @@ import socket
 import threading
 import time
 from prometheus_flask_exporter import PrometheusMetrics
+import uuid
 
 
 comment = Counter('comments', 'number of comments')
@@ -64,6 +65,33 @@ def get_post(post_id):
    if post is None:
       abort(404)
    return post, comments
+
+
+@app.route('/create', methods=('GET', 'POST'))
+def create():
+   if request.method == 'POST':
+      post_id = request.form.get('id') or uuid.uuid4().hex
+      title = request.form.get('title')
+      link = request.form.get('link')
+      if not title:
+         flash('Title is required!')
+      else:
+         conn = get_db_connection()
+         conn.execute('INSERT OR REPLACE INTO posts (id, title, link) VALUES (?,?,?)',
+                      (post_id, title, link))
+         conn.commit()
+         conn.close()
+         return redirect(url_for('post', post_id=post_id))
+   return render_template('create.html')
+
+
+@app.route('/<post_id>/delete', methods=('POST',))
+def delete(post_id):
+   conn = get_db_connection()
+   conn.execute('DELETE FROM posts WHERE id = ?', (post_id,))
+   conn.commit()
+   conn.close()
+   return redirect(url_for('index'))
 
 
 def content_page(rss_news_url, route):

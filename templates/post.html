@@ -7,6 +7,12 @@
   <p> {{ comment['body'] }}</p>
   {% endfor %}
 
+  <form method="post" action="/{{ post['id'] }}/delete">
+    <div class="form-group">
+      <button type="submit" class="btn btn-danger">Delete Post</button>
+    </div>
+  </form>
+
 <form method="post">
     <div class="form-group">
         <label for="user">Username</label>
