@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content%}
+   <h1>{% block title %}Newest freshest <s>IT</s> <i>Finance</i> news {% endblock %}</h1>
+ 
+    
+   {% for articles in data %}
+   {% for article in articles %}
+     <h3>{{article.get('title')}}</h3>
+     <p>{{article.get('description')}}</p>
+     <p><a href="{{article.get('link')}}" target="_blank">Read more</a> <a href="/{{article.get('guid')}}" text-align:right>Comments</a></p>
+     {% if article.get('image') != None  %}
+       <img src="{{article.get('image')}}">
+     {% endif %}
+     {% endfor %}
+   <br><hr><br>
+ {% endfor %}
+
+{% endblock %}     

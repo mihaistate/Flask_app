@@ -1,0 +1,10 @@
+sudo docker build . -t finance
+sudo docker run -itd -p 8000:8000 --name=main finance
+cd prom
+# at this point, configure prometheus.yml by inserting the secret key for the remote grafana instance, and inserting the public ip address of the machine in the relevant place
+sudo docker build . -t my_prom
+sudo docker run -itd -p 9090:9090 --name=prom my_prom
+sudo apt install nginx
+sudo mv nginx_setup /etc/nginx/sites-available/default
+sudo systemctl start nginx
+
