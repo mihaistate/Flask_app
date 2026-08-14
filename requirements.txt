@@ -6,3 +6,5 @@ psutil==5.9.1
 pytest==7.4.2
 Werkzeug==3.0.4
 gunicorn
+selenium==4.14.0
+webdriver-manager==4.0.0
